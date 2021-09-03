@@ -3,6 +3,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 
 public class Notepad extends JFrame {
@@ -10,7 +15,8 @@ public class Notepad extends JFrame {
     JTextPane pane;
 
     Notepad(){
-     setBounds(0,0,1950,1050);
+        setBounds(0,0,1000,555);
+        area = new JTextArea();
         JMenuBar menuBar = new JMenuBar();
 
         JMenu file = new JMenu("file");
@@ -67,16 +73,42 @@ public class Notepad extends JFrame {
         menuBar.add(edit);
         menuBar.add(help);
 
+
         setJMenuBar(menuBar);
 
-        area =new JTextArea();
+        add(area);
+        setLocationRelativeTo(null);
+        exit.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                Notepad.exit();
+            }
+        });
 
-       exit.addActionListener(new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent e) {
-             Notepad.exit();
-          }
-       });
+
+        save.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                String fileContent = area.getText();
+                try {
+                    FileOutputStream file = new FileOutputStream("NewFile.txt");
+                    byte[] a = fileContent.getBytes();
+                    file.write(a);
+                    file.close();
+                } catch (FileNotFoundException fileNotFoundException)
+                {
+                    fileNotFoundException.printStackTrace();
+                } catch (IOException ioException)
+                {
+                    ioException.printStackTrace();
+                }
+
+            }
+        });
 
     }
     public static void main(String[] args)
@@ -85,8 +117,8 @@ public class Notepad extends JFrame {
         new Notepad().setVisible(true);
 
     }
-     static void exit(){
-       System.exit(1);
+    static void exit(){
+        System.exit(1);
 
     }
 }
